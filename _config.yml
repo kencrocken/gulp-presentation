@@ -1,3 +1,5 @@
+baseurl: "/gulp-presentation/" # the subpath of your site, e.g. /blog/
+
 # Your presentation title
 title: Jekyll and Reveal.js
 
