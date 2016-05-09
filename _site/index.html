@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Jekyll and Reveal.js</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+
+        <link rel="stylesheet" href="/css/main.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="reveal.js/lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+            <div class="slides">
+
+                
+<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$" data-notes="^Note:">
+<script type="text/template">
+[gulpLogo]: /images/gulp-2x.png "Gulp"
+![Alt text][gulpLogo]
+
+</script>
+</section>
+
+<section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$" data-notes="^Note:">
+<script type="text/template">
+## The Repetitive Task
+- Compiling SASS/LESS to CSS <!-- .element: class="fragment" -->
+- Minifying <!-- .element: class="fragment" -->
+- Bundling <!-- .element: class="fragment" -->
+- Linting <!-- .element: class="fragment" -->
+- Copying files <!-- .element: class="fragment" -->
+- Refereshing the browser(s) <!-- .element: class="fragment" -->
+
+---
+
+[gulpLog]: /images/gulp-log.png "Gulp log"
+##AUTOMATE!
+![Alt text][gulpLog]
+
+---
+
+## What is Gulp?
+- Gulp is a javascript task/build runner allowing for the automation of tasks  <!-- .element: class="fragment" -->
+
+--
+
+### Gulp workflow
+- Define a task <!-- .element: class="fragment" -->
+- Load a set of files in the gulp task stream to be processed. <!-- .element: class="fragment" -->
+- Modify the files in the stream.<!-- .element: class="fragment" -->
+- Send the new files to a specified destination. <!-- .element: class="fragment" -->
+
+--
+
+### Gulp API 
+- `gulp.task` defines the task.
+- `gulp.src` Emits files matching provided pattern, returning a stream of vinyl files that can be piped.
+- `gulp.dest` Can be piped to and it will write files.
+- `gulp.watch` Watch files and do something when a file changes.
+
+[gulp api docs](https://github.com/gulpjs/gulp/blob/master/docs/API.md)
+
+--
+
+### Example Task
+```js
+// Install the relevant modules
+// npm i --save-dev gulp gulp-sass gulp-sourcemaps gulp-autoprefixer
+
+'use strict';
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+var autoprefixer = require('gulp-autoprefixer');
+
+gulp.task('sass', function() {
+  return gulp.src('sass/main.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      outputStyle: 'nested',
+      includePaths: [
+        "bower_components/susy/sass"  
+      ]
+    }))
+    .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 9'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/styles/'));
+});
+```
+
+--
+
+### Gulp CLI 
+
+`gulp <task> <othertask>`
+
+Just running `gulp` will execute the task you defined as `default`. If there is no `default` task gulp will error.
+
+`gulp -T`  returns a task dependency tree for the loaded gulpfile.
+
+[gulp cli docs](https://github.com/gulpjs/gulp/blob/master/docs/CLI.md)
+
+--
+
+### gulpfile.babel.js, ES6 
+
+`npm i --save-dev babel-core babel-preset-es2015`
+
+- Rename gulpfile.js to gulpfile.babel.js  
+
+--
+
+### Example task in ES6
+
+```js
+'use strict';
+
+import sass         from 'gulp-sass';
+import sourcemaps   from 'gulp-sourcemaps';
+import autoprefixer from 'gulp-autoprefixer';
+
+gulp.task('sass', ()=> {
+  return gulp.src('sass/main.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      outputStyle: 'nested',
+      includePaths: [
+        "bower_components/susy/sass"  
+      ]
+    }))
+    .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 9'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/styles/'));
+});
+```
+
+--
+
+### Gulpfile Organization
+
+- Gulp files with minimal tasks, ok to keep it in one file.
+- Gulp files can get long, might be best to break it up into multiple files
+- Mindful of task dependencies.  Below the default tasks only run after the 'hello' and 'sass' tasks complete.  
+
+```js
+gulp.task('default', ['hello', 'sass'], function() {
+    console.log("DEFAULT TASK");
+});
+```
+
+---
+
+## Fini
+### Sources
+[What is gulp.js?](http://brandonclapp.com/what-is-gulp-js-and-why-use-it/)  
+[Automating Build Tasks With Gulp](http://www.danielgynn.com/automating-build-tasks-with-gulp/)  
+[Using ES6 with Gulp](https://markgoodyear.com/2015/06/using-es6-with-gulp/)  
+[ES6 Features](http://es6-features.org)  
+[Import/Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)  
+[Arrow Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)  
+[Template Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)  
+[Constants](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)  
+</script>
+</section>
+
+
+
+            </div>
+
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+                
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    
+                    
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
